@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>工厂方法模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        /**
+         * 工厂方法模式
+         */
+
+        var Factory = function (type, params) {
+            //safe mode
+            if (this instanceof Factory) {
+                var s = new this[type](params);
+                return s;
+            }
+            else {
+                return new Factory(type, params);
+            }
+        }
+
+        Factory.prototype = {
+            Java: function (params) { },
+            JavaScript: function (params) { },
+            UI: function (params) { },
+            php: function (params) { }
+        }
+
+        var ad1 = Factory('Java', { a: 1, b: 2 })
+        var ad2 = new Factory('JavaScript', { c: 3, d: 4 })
+
+        console.log(ad1, ad2)
+
+    </script>
+</body>
+
+</html>

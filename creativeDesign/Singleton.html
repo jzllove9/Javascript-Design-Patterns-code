@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>单例模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        var LazySingle = (function () {
+            var _instance = null;
+
+            //私有方法(其实返回的是这个Single类的实例)
+            function Single() {
+                return {
+                    publicMethod: function () { },
+                    publicPrototype: 1
+                }
+            }
+
+            //获取单例的接口
+            return function () {
+                if (!_instance) {
+                    _instance = new Single();
+                }
+
+                return _instance;
+            }
+        })()
+
+        var _i1 = LazySingle();
+        _i1.publicMethod2 = function () { }
+
+        console.log(_i1);
+
+        var _i2 = LazySingle();
+
+        console.log(_i2, _i1 === _i2);
+
+    </script>
+</body>
+
+</html>

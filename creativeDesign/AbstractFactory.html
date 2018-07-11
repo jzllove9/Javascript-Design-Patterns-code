@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>抽象工厂</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        var VehicleFacory = function (subType, superType) {
+            if (typeof VehicleFacory[superType] === 'function') {
+                function F() { };
+                F.prototype = VehicleFacory[superType].prototype; //书中这里貌似少了一个原型对象
+                subType.constructor = subType;
+                subType.prototype = new F();
+            } else {
+                throw new Error("该抽象类不存在!");
+            }
+        }
+
+        VehicleFacory.Car = function () {
+            this.type = 'car';
+        }
+        VehicleFacory.Car.prototype = {
+            getPrice: function () {
+                console.log("抽象类方法，无法直接调用")
+            },
+            getSpeed: function () {
+                console.log("抽象类方法，不能直接调用")
+            }
+        }
+
+        var BMW = function (price, speed) {
+            this.price = price;
+            this.speed = speed;
+        }
+        VehicleFacory(BMW, 'Car');
+        BMW.prototype.getPrice = function () {
+            return this.price
+        }
+
+        BMW.prototype.getSpeed = function () {
+            return this.speed;
+        }
+
+        var _bmw = new BMW(100000, 120);
+        console.log(_bmw);
+        console.log(_bmw.getPrice());
+        console.log(_bmw.getSpeed());
+
+
+    </script>
+</body>
+
+</html>

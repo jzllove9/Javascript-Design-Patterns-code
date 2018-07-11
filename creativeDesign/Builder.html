@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>建造者模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        //Human类 (建造过程类）
+        var Human = function (param) {
+            this.skill = param && param.skill || '技能保密';
+            this.hobby = param && param.hobby || '兴趣保密';
+        }
+        Human.protoype = {
+            constructor: Human,
+
+            getSkill: function () {
+                return this.skill
+            },
+            getHobby: function () {
+                return this.hobby
+            }
+        }
+
+        //姓名类 （建造过程类）
+        var Named = function (name) {
+            var that = this;
+            (function (that, name) {
+                that.wholeName = name;
+                if (name.indexOf(' ') > -1) {
+                    that.FirstName = name.slice(0, name.indexOf(' '));
+                    that.SecondName = name.slice(name.indexOf(' '));
+                }
+            })(that, name)
+        }
+        //工作类 （建造过程类）
+        var Work = function (work) {
+            var that = this;
+            (function (that, work) {
+                switch (work) {
+                    case 'code':
+                        that.work = '工程师';
+                        that.workDescript = '每天沉醉于编程';
+                        break;
+                    case 'UI':
+                    case 'UE':
+                        that.work = '设计师';
+                        that.workDescript = '设计更似一种艺术';
+                        break;
+                    case 'teach':
+                        that.work = '教师';
+                        that.workDescript = '分享也是一种快乐';
+                        break;
+                    default:
+                        that.work = work;
+                        that.workDescript = '对不起，我们还不清楚您所选择职位的相关描述';
+                        break;
+                }
+            })(that, work)
+        }
+        //更换期望的职位 TODO 改变的工作也需要归类
+        Work.prototype.changeWork = function (work) {
+            this.work = work;
+        }
+        //添加对职位的描述
+        Work.prototype.changeDescript = function (sentence) {
+            this.workDescript = sentence;
+        }
+
+
+        /**
+         *  应聘者建造者
+         */
+        var Person = function (name, work, other) {
+            if (!other) other = {};
+            var _person = new Human(other);
+            _person.name = new Named(name);
+            _person.work = new Work(work);
+            _person.work.changeWork('UI');
+            return _person;
+        }
+
+        //建造者的建造实例
+        var person = new Person('Jia ziling', 'code', {
+            skill: "Javascript",
+            hobby: "Sing"
+        });
+
+        console.log(person.skill)
+        console.log(person.hobby)
+        console.log(person.work);
+        console.log(person.name);
+    </script>
+</body>
+
+</html>

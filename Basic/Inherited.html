@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>寄生组合式继承</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        //寄生组合式继承
+        //寄生继承 生成基对象
+        function inheritObject(o) {
+            function F() { }
+            F.prototype = o;
+            return new F();
+        }
+
+        /**
+         * 寄生式继承 继承原型
+         */
+        function inheritPrototype(subClass, superClass) {
+            //复制一份父类原型保存在变量中
+            var p = inheritObject(superClass.prototype);
+            //修正因为重写子类原型导致子类的constructor属性被修改
+            p.constructor = subClass;
+            //设置子类原型
+            //jzl修改 由于上一步制定了父类实例的constructor指向子类， 所以如果想要复制
+            //父类原型对象的方法则必须从父类实例对象的__proto__属性来获取
+            //如果按照书中写的方法也可以保证子类的实例的__proto__指向子类的构造函数，但是会导致：
+            //1. 子类prototype中定义的方法丢失    (因为相当于重写了子类的prototype)
+            //2. 而父类原型对象中的方法也无法被子类成功继承    (因为没有关心访问父类的原型对象)
+            //subClass.prototype = p;
+            subClass.prototype = Object.assign(subClass.prototype, p.__proto__);
+        }
+
+        /**
+         * 定义父类
+         */
+        function SuperClass(name) {
+            this.name = name;
+            this.colors = ['red', 'blue', 'green'];
+        }
+
+        SuperClass.prototype.getName = function () {
+            console.log(this.name)
+        };
+
+        /**
+         * 定义子类
+         */
+        function SubClass(name, time) {
+            //构造函数式继承
+            SuperClass.call(this, name);
+            //子类新增属性
+            this.time = time;
+        }
+
+        //子类新增原型方法
+        SubClass.prototype.getTime = function () {
+            console.log(this.time);
+        }
+
+        //寄生式继承父类原型
+        inheritPrototype(SubClass, SuperClass);
+
+        var instance1 = new SubClass('js book', 2014);
+        var instance2 = new SubClass('css book', 2013);
+
+        console.log(instance1, instance2)
+
+        instance1.getTime();
+        instance1.getName();
+        instance2.getTime();
+        instance2.getName();
+    </script>
+</body>
+
+</html>

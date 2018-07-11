@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>简单工厂模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        /**
+        * 简单工厂模式
+        */
+
+        //创建Pop （也是一种简单工厂）
+        function createPop(type, text) {
+            //创建一个对象， 并对对象拓展属性和方法
+            var o = new Object();
+            o.content = text;
+            o.show = function () {
+                //显示方法
+            };
+
+            switch (type) {
+                case 'alert':
+                    //警示框差异部分
+                    break;
+                case 'prompt':
+                    //提示框差异部分
+                    break;
+                case 'confirm':
+                    //确认框差异部分
+                    break;
+            }
+            return o;
+        }
+
+        var alert = function () { }
+        alert.prototype = createPop('alert', '确认');
+
+        var prompt = function () { }
+        prompt.prototype = createPop('prompt', '提示');
+
+        var confirm = function () { }
+        //这种方式是修改confirm的prototype而不是重写其prototype
+        //这么做的话实例的constructor可以指向其构造函数
+        confirm.prototype = Object.assign(confirm.prototype, createPop('confirm', '提交'));
+
+        //Pop工厂 (另一种简单工厂)
+        var PopFactory = function (name) {
+            switch (name) {
+                case 'alert':
+                    return new alert();
+                    break;
+                case 'prompt':
+                    return new prompt();
+                    break;
+                case 'confirm':
+                    return new confirm();
+                    break;
+            }
+        }
+
+        //使用
+        var pop1 = PopFactory('alert');
+        var pop2 = PopFactory('prompt');
+        var pop3 = PopFactory('confirm');
+
+        console.log(pop1, pop2, pop3);
+    </script>
+</body>
