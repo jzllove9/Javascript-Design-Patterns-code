@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>模板模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div id="content"></div>
+    <script>
+        function formateString(str, data) {
+            return str.replace(/\{#(\w+)#\}/g, function (match, key) {
+                return typeof data[key] === undefined ? '' : data[key]
+            });
+        }
+        //基类
+        var Nav = function (data) {
+            this.item = '<a href="{#href#}" title="{#title#}">{#name#}</a>';
+            this.html = '';
+            for (var i = 0, len = data.length; i < len; i++) {
+                this.html += formateString(this.item, data[i]);
+            }
+
+            return this.html;
+        }
+        //带有消息提醒的信息导航
+        var NumNav = function (data) {
+            var tpl = '<b>{#num#}</b>'
+            for (var i = data.length - 1; i >= 0; i--) {
+                data[i].name += formateString(tpl, data[i]);
+            }
+            return Nav.call(this, data);
+        }
+
+        var nav = document.getElementById("content");
+        nav.innerHTML = NumNav([
+            {
+                href: "http://www.baidu.com/",
+                title: "百度一下， 你就知道",
+                name: "百度",
+                num: 10
+            },
+            {
+                href: "http://www.taobao.com/",
+                title: "淘宝商城",
+                name: "淘宝",
+                num: 2
+            }
+        ])
+    </script>
+</body>
+
+</html>
