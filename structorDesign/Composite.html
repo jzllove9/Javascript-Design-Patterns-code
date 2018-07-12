@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>组合模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        //继承 参考./Basic/Inherited.html
+        function inheritObject(o) {
+            function F() { };
+            F.prototype = o;
+            return new F();
+        }
+        function inheritPrototype(subClass, superClass) {
+            var p = inheritObject(superClass.prototype)
+            p.constructor = subClass;
+            subClass.prototype = Object.assign(subClass.prototype, p.__proto__);
+        }
+        //新闻基类
+        var News = function () {
+            this.children = [];
+            this.element = null;
+        }
+        News.prototype = {
+            init: function () {
+                throw new Error("请重写你的方法")
+            },
+            add: function () {
+                throw new Error("请重写你的方法")
+            },
+            getElement: function () {
+                throw new Error("请重写你的方法");
+            }
+        }
+        //容器类构造函数
+        var Container = function (id, parent) {
+            News.call(this);
+            this.id = id;
+            this.parent = parent;
+            this.init();
+        }
+        inheritPrototype(Container, News);
+        Container.prototype.init = function () {
+            this.element = document.createElement('div');
+            this.element.id = this.id;
+            this.element.className = 'new-container';
+        }
+        Container.prototype.add = function (child) {
+            this.children.push(child);
+            this.element.appendChild(child.getElement());
+            return this;
+        }
+        Container.prototype.getElement = function () {
+            return this.element;
+        }
+        Container.prototype.show = function () {
+            this.parent.appendChild(this.element)
+        }
+        //下一层级实现方式与之类似
+        //行成员
+        var Item = function (classname) {
+            News.call(this);
+            this.classname = classname;
+            this.init();
+        }
+        inheritPrototype(Item, News);
+        Item.prototype.init = function () {
+            this.element = document.createElement('li');
+            this.element.className = this.classname || '';
+        }
+        Item.prototype.add = function (child) {
+            this.children.push(child);
+            this.element.appendChild(child.getElement());
+            return this;
+        }
+        Item.prototype.getElement = function () {
+            return this.element;
+        }
+        //组合成员
+        var NewsGroup = function (classname) {
+            NewsGroup.call(this);
+            this.classname = classname;
+            this.init();
+        }
+        inheritPrototype(NewsGroup, News);
+        NewsGroup.prototype.init = function () {
+            this.element = document.createElement('div');
+            this.element.className = this.classname || '';
+        }
+        NewsGroup.prototype.add = function (child) {
+            this.children.push(child);
+            this.element.appendChild(child.getElement());
+            return this;
+        }
+        NewsGroup.prototype.getElement = function () {
+            return this.element;
+        }
+        //图片新闻类 具体实现过程略
+        var ImageNews = function (url, herf, classname) { }
+        inheritPrototype(ImageNews, News);
+        ImageNews.prototype.init = function () { };
+        ImageNews.prototype.add = function () { };
+        ImageNews.prototype.getElement = function () { };
+        //icon 新闻类 [icon : type] XXXXXXX
+        var IconNews = function (text, href, type) { }
+        inheritPrototype(IconNews, News);
+        IconNews.prototype.init = function () { };
+        IconNews.prototype.add = function () { };
+        IconNews.prototype.getElement = function () { };
+        //简讯类 
+        var EasyNews = function (text, href) { }
+        inheritPrototype(EasyNews, News);
+        EasyNews.prototype.init = function () { };
+        EasyNews.prototype.add = function () { };
+        EasyNews.prototype.getElement = function () { };
+        //类型新闻 [NBA] XXXXXXX
+        var TypeNews = function (text, href) { }
+        inheritPrototype(TypeNews, News);
+        TypeNews.prototype.init = function () { };
+        TypeNews.prototype.add = function () { };
+        TypeNews.prototype.getElement = function () { };
+
+        //测试用例
+        var news = new Container('news', document.body);
+        news
+            .add(
+                new Item('normal').add(
+                    new IconNews('梅西不拿金球奖也伟大', "#", 'video')
+                )
+            )
+            .add(
+                new Item('normal').add(
+                    new IconNews('保护强国强队用意明显', '#', 'live')
+                )
+            )
+            .add(
+                new Item('normal').add(
+                    new NewsGroup('has-img').add(
+                        new ImageNews('img/1.jpg', "#", 'small')
+                    ).add(
+                        new EasyNews('从240斤胖子变成型男', '#')
+                    ).add(
+                        new EasyNews('五大雷人跑步机', "#")
+                    )
+                )
+            ).add(
+                new Item("normal").add(
+                    new TypeNews('AK47 不愿为费城打球', '#', 'NBA', 'left')
+                )
+            )
+            .show();
+    </script>
+</body>
+
+</html>

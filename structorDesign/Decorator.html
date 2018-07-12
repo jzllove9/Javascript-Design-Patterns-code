@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>装饰者模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        //被装饰者
+        var telInput = document.getElementById('tel_input');
+        var telWarnText = document.getElementById('tel_warn_text');
+        input.onclick = function () {
+            telWarnText.style.display = 'inline-block';
+        }
+        //装饰者
+        var decorator = function (input, fn) {
+            var input = document.getElementById(input);
+            if (typeof input.onclick === "function") {
+                var oldClickFn = input.onclick;
+                input.onclick = function () {
+                    oldClickFn();
+                    fn();
+                }
+            } else {
+                input.onclick = fn;
+            }
+        }
+    </script>
+</body>
+
+</html>

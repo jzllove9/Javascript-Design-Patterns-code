@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>外观模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <input id="myInput" value="click me!" type="button">
+    <script>
+        function addEvent(dom, type, fn) {
+            if (dom.addEventListener) {
+                dom.addEventListener(type, fn, false)
+            } else if (dom.attachEvent) {
+                dom.attachEvent('on' + type, fn)
+            } else {
+                dom['on' + type]
+            }
+        }
+
+        var myInput = document.getElementById('myInput');
+        addEvent(myInput, 'click', function () {
+            console.log('event one!')
+        })
+        addEvent(myInput, 'click', function () {
+            console.log('event two!')
+        })
+    </script>
+
+</body>
+
+</html>

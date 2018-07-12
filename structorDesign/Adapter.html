@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>适配器模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+    <script>
+        /**************参数适配器***************************/
+        function doSomething(obj) {
+            var _adapter = {
+                a: 'a',
+                b: 'b',
+                c: 'c',
+                d: 'c'
+            }
+            for (var i in _adapter) {
+                _adapter[i] = obj[i] || _adapter[i];
+            }
+            //TODO
+        }
+        /**************数据适配器***************************/
+        var arr = ['a', 'b', 'c', 'd'];
+        function arrToObjAdapter(arr) {
+            return {
+                a: arr[0],
+                b: arr[1],
+                c: arr[2],
+                d: arr[3]
+            }
+        }
+        var _adapterObj = arrToObjAdapter(arr);
+        console.log(_adapterObj);
+    </script>
+</body>
+
+</html>
