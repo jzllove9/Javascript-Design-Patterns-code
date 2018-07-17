@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>观察者模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+    <script>
+        var Observer = (function () {
+            var __message = {};
+            return {
+                //注册事件
+                regist: function (type, fn) {
+                    if (typeof __message[type] === 'undefined') {
+                        __message[type] = [fn];
+                    } else {
+                        __message[type].push(fn)
+                    }
+                },
+                //触发事件
+                fire: function (type, args) {
+                    //消息未注册，直接返回
+                    if (!__message[type]) {
+                        return;
+                    }
+
+                    var _events = {
+                        type: type,
+                        args: args || {}
+                    }
+
+                    for (var i = 0, len = __message[type].length; i < len; i++) {
+                        __message[type][i].call(this, _events);
+                    }
+                },
+                //移除事件
+                remove: function (type, fn) {
+                    if (__message[type] instanceof Array) {
+                        for (var i = __message[type].length - 1; i >= 0; i--) {
+                            __message[type][i] === fn && __message[type].splice(i, 1);
+                        }
+                    }
+                }
+            }
+
+        })();
+
+        //测试用例
+        Observer.regist("type1", function (e) {
+            console.log('type1 fired! ', e);
+        });
+
+
+        Observer.fire("type1", {
+            time: Date.now()
+        })
+    </script>
+</body>
+
+</html>
