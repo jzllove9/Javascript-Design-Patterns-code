@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>委托模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        var Deal = {
+            a: function () { },
+            b: function (res) { },
+            c: function (res) { },
+            d: function (res) { },
+        }
+        //一次性处理完所有请求，减少请求次数提升效率
+        $.get('./deal.php?', function (res) {
+            for (var i in res) {
+                Deal[i] && Deal[i](res[i]);
+            }
+        })
+    </script>
+</body>
+
+</html>

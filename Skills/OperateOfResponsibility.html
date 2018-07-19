@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>链模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div id="demo"></div>
+    <div id="test"></div>
+    <script>
+        var A = function (selector, context) {
+            return new A.fn.init(selector, context);
+        }
+
+        A.fn = A.prototype = {
+            constuctor: A,
+            init: function (selector, context) {
+                this.length = 0;
+                context = context || document;
+                if (~selector.indexOf("#")) {
+                    this[0] = document.getElementById(selector.slice(1));
+                    this.length = 1;
+                } else {
+                    var doms = context.getElementsByTagName(selector),
+                        i = 0,
+                        len = doms.length;
+                    for (; i < len; i++) {
+                        this[i] = doms[i];
+                    }
+                    this.length = len;
+                }
+
+                this.context = context;
+                this.selector = selector;
+                return this;
+            },
+            //增强数组
+            push: [].push,
+            sort: [].sort,
+            splice: [].splice
+        }
+
+        A.fn.init.prototype = A.fn
+
+        //对象拓展
+        A.extend = A.fn.extend = function () {
+            var i = 1, len = arguments.length, target = arguments[0], key;
+            if (i == len) {
+                target = this;
+                i--;
+            }
+
+            for (; i < len; i++) {
+                for (key in arguments[i]) {
+                    target[key] = arguments[i][key];
+                }
+            }
+
+            return target;
+        }
+        //链式扩展
+        //...
+
+        //测试用例
+        var demo = A('#demo');
+        console.log(demo)
+        //参考jQuery
+    </script>
+</body>
+
+</html>

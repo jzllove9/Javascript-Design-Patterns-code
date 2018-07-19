@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>职责链模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        //从服务端拉取新闻数据
+        function getNewsData() {
+            var _data = null;
+            //get 'result' from the server
+            var _result = {};
+            _data = formateData(_result);
+        }
+
+        //数据适配器
+        function formateData(data) {
+            var _data = data;
+            //..
+
+        }
+
+        //创建新闻模块
+        function createNewsModule(data) {
+            var modules = [];
+
+            for (var i in data) {
+                var _data = data[i];
+                //..
+                modules.push(/*something*/)
+            }
+
+            createInteraction(modules);
+        }
+
+        //为新闻模块添加事件
+        function createInteraction(modulesArray) {
+            for (var i in modulesArray) {
+                var _module = modulesArray[i];
+                //添加交互的兼容性写法
+                //todo
+            }
+        }
+
+    </script>
+</body>
+
+</html>

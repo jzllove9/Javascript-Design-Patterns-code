@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>访问者模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        var Visitor = (function () {
+            return {
+                splice: function () {
+                    var args = Array.prototype.splice.call(arguments, 1);
+                    return Array.prototype.splice.apply(arguments[0], args);
+                },
+                push: function () {
+                    var length = arguments[0].length || 0;
+                    var args = this.splice(arguments, 1);
+                    arguments[0].length = length + arguments.length - 1;
+                    return Array.prototype.push.apply(arguments[0], args);
+                },
+                pop: function () {
+                    return Array.prototype.pop.apply(arguments[0]);
+                }
+            }
+        })()
+
+        //测试用例
+        var obj = {};
+
+        Visitor.push(obj, 4, 5, 6);
+        console.log(obj);
+        Visitor.pop(obj);
+        console.log(obj);
+        Visitor.push(obj, 7, 8, 9);
+        console.log(obj);
+        Visitor.splice(obj, 1, 2);
+        console.log(obj);
+    </script>
+</body>
+
+</html>

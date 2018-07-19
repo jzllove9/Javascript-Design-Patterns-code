@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>中介者模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        /***
+         * 个人心得：观察者和中介者最大最重要的区别在于中介者直接参与了用户行为的实现，而观察者并不参与，观察者只负责进行消息的通知 
+         * 中介者模式与业务相关，订阅/发布模式与业务无关。
+         */
+        //飞机
+        var Plane = function (name) {
+            this.name = name;
+        }
+
+        Plane.prototype.takeOff = function () { //起飞
+            ControlTower.takeOff(this);
+        }
+
+        Plane.prototype.sendMsg = function (toPlane, msg) { //飞机间发消息
+            ControlTower.sendMsg(this, toPlane, msg);
+        }
+
+        Plane.prototype.receive = function (fromPlane, msg) {
+            console.log(this.name + "-收到来自-" + fromPlane.name + "消息:" + msg);
+        }
+
+        //飞机控制塔(中介者)
+        var ControlTower = (function () {
+            //假设只有一条跑道，跑道只能起飞一只飞机（不说降落）
+            var onTrackPlaneName,
+                canTrackUse = true;
+            var takeOff = function (plane) {
+                if (!canTrackUse) {
+                    console.log("抱歉 " + plane.name + " 跑道正在被 " + onTrackPlaneName + " 使用中...");
+                    return;
+                }
+                if (onTrackPlaneName == plane.name) {
+                    console.log("您正在起飞中...");
+                    return;
+                }
+                canTrackUse = false;
+                onTrackPlaneName = plane.name;
+                console.log(plane.name + "正在起飞中...");
+                setTimeout(function () {
+                    canTrackUse = true;
+                    onTrackPlaneName = null;
+                    console.log(plane.name + "已起飞...");
+                }, 5000);
+            }
+            var sendMsg = function (from, to, msg) {
+                to.receive(from, msg);
+            }
+
+            return {
+                takeOff: takeOff,
+                sendMsg: sendMsg
+            }
+        })();
+
+        var p747 = new Plane('波音747');
+        var p666 = new Plane('飞豹666');
+
+        p747.takeOff();
+        p666.takeOff();
+        p747.sendMsg(p666, '开完飞机吃个饭么');
+    </script>
+</body>
+
+</html>

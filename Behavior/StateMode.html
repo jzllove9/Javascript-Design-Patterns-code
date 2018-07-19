@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>状态模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        //超级玛丽类
+        var MarryState = function () {
+            var _currentState = {},
+                states = {
+                    //跳跃
+                    jump: function () { console.log('jump') },
+                    //移动
+                    move: function () { console.log('move') },
+                    //射击
+                    shoot: function () { console.log('shoot') },
+                    //蹲下
+                    squat: function () { console.log('squat') }
+                };
+
+            //动作控制类
+            var Action = {
+                //改变状态方法
+                changeState: function () {
+                    var arg = arguments;
+
+                    _currentState = {};
+                    if (arg.length) {
+                        for (var i = 0, len = arg.length; i < len; i++) {
+                            _currentState[arg[i]] = true;
+                        }
+                    }
+                    //返回动作控制类
+                    return this;
+                },
+
+                //触发动作方法
+                goes: function () {
+                    console.log("触发一次动作");
+                    for (var i in _currentState) {
+                        states[i] && states[i]();
+                    }
+                    return this;
+                }
+            }
+
+            //返回借口方法change和goes
+            return {
+                change: Action.changeState,
+                goes: Action.goes
+            }
+        }
+
+        /**
+         * 状态模式 拒绝了对于用户不同行为所形成的分支的判断，函数内部仅关心传入参数所影响的对象状态，而不关心这些
+         * 参数传入的顺序和互相之间的影响。
+         */
+
+        MarryState()
+            .change('jump', 'shoot')
+            .goes()
+            .goes()
+            .change('shoot')
+            .goes();
+
+    </script>
+</body>
+
+</html>

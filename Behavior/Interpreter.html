@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>解释器模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div></div>
+    <div id="container">
+        <div>
+            <div>
+                <ul>
+                    <li>
+                        <span id="span1"></span>
+                    </li>
+                    <li>
+                        <span id="span2"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <div>
+                <ul>
+                    <li>
+                        <span id="span6"></span>
+                    </li>
+                    <li>
+                        <span id="span7"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        var Interpreter = (function () {
+            //获取同级兄弟节点
+            function getSublingName(node) {
+                if (node.previousSibling) {
+                    var name = '',
+                        count = 1,
+                        nodeName = node.nodeName,
+                        sibling = node.previousSibling;
+                    while (sibling) {
+                        if (sibling.nodeType == 1 && sibling.nodeType === node.nodeType && sibling.nodeName) {
+                            if (nodeName == sibling.nodeName) {
+                                name += ++count;
+                            } else {
+                                count = 1;
+                                name += '|' + sibling.nodeName.toUpperCase();
+                            }
+                        }
+                        sibling = sibling.previousSibling;
+                    }
+                    return name;
+                } else {
+                    return '';
+                }
+            }
+
+            return function (node, wrap) {
+                var path = [],
+                    wrap = wrap || document;
+
+                if (node == wrap) {
+                    if (wrap.nodeType == 1) {
+                        path.push(wrap.nodeName.toUpperCase());
+                    }
+                    return path
+                }
+
+                if (node.parentNode !== wrap) {
+                    path = arguments.callee(node.parentNode, wrap);
+                }
+                else {
+                    if (wrap.nodeType == 1) {
+                        path.push(wrap.nodeName.toUpperCase())
+                    }
+                }
+
+                var sublingsNames = getSublingName(node);
+
+                if (node.nodeType == 1) {
+                    path.push(node.nodeName.toUpperCase() + sublingsNames);
+                }
+
+                return path
+            }
+        })();
+
+        var path = Interpreter(document.getElementById('span7'));
+        console.log(path.join('>'));
+    </script>
+</body>
+
+</html>
